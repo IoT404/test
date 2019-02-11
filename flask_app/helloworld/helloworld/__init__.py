@@ -35,9 +35,9 @@ def login():
         session_check = request.form.get("uname", None)
         if None == session_check:
             if "logged_in" in session:
-                return session["uname"] + "님 환영합니다"
-            else:
-                return login_test()
+                if True == session["logged_in"]:
+                    return session["uname"] + "님 환영합니다"
+            return login_test()
         if request.form["uname"] == "iot":
             if request.form["passwd"] == "2019":
                 session["logged_in"] = True
@@ -46,9 +46,16 @@ def login():
         return "로그인 실패"
     else:
         if "logged_in" in session:
-            return session["uname"] + "님 환영합니다"
-        else:
-            return login_test()
+            if True == session["logged_in"]:
+                return session["uname"] + "님 환영합니다"
+        return login_test()
+
+@app.route("/logout", methods = ["POST", "GET"])
+def logout():
+    session["logged_in"] = False
+    session.pop("uname", None)
+    return "로그아웃 되셨습니다"
+
 
 app.secret_key = "iot_key"
 
