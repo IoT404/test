@@ -56,6 +56,12 @@ def logout():
     session.pop("uname", None)
     return "로그아웃 되셨습니다"
 
+@app.route("/template")
+@app.route("/template/")
+@app.route("/template/<iot_number>")
+def template_test(iot_number = None):
+    iot_members = ["최성주", "주수홍", "최재원"]
+    return render_template("template_test.html", iot_number=iot_number, iot_members=iot_members)
 
 app.secret_key = "iot_key"
 
