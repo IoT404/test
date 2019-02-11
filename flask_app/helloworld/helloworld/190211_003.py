@@ -40,8 +40,7 @@ def login():
         else:
             return "로그인 실패"
     else:
-#        return "다시 시도해 주세요"
-        return render_template("login.html")
+        return login_test()
 
 app.secret_key = "iot_key"
 
