@@ -7,6 +7,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 app = Flask(__name__)
+app.debug = True
 
 @app.route('/board', methods = ['GET'])
 def board_list_get():
