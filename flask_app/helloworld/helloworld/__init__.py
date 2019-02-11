@@ -40,7 +40,10 @@ def login():
         else:
             return "로그인 실패"
     else:
-        return login_test()
+        if session["logged_in"] == True:
+            return request.form["uname"] + "님 환영합니다"
+        else:
+            return login_test()
 
 app.secret_key = "iot_key"
 
