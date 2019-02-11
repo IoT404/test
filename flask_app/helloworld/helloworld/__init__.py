@@ -29,7 +29,7 @@ def IoT_user_number_id(num_id):
 def login_test():
     return render_template('login.html')
 
-@app.route('/login', methods = ["POST", "GET"])
+@app.route("/login", methods = ["POST", "GET"])
 def login():
     if request.method == "POST":
         if (request.form["uname"] == "iot"
@@ -40,9 +40,12 @@ def login():
         else:
             return "로그인 실패"
     else:
-        if session["logged_in"] == True:
-            return request.form["uname"] + "님 환영합니다"
-        else:
+        try:
+            if session["logged_in"] == True:
+                return session["uname"] + "님 환영합니다"
+            else:
+                return login_test()
+        except:
             return login_test()
 
 app.secret_key = "iot_key"
@@ -71,4 +74,4 @@ def IoT_http_prepost_response():
 	return "<img src=" + url_for("static", filename = "1.png") + ">"
 
 if __name__ == "__main__":
-	app.run(host = "0.0.0.0")
+	app.run(host = "192.168.0.210")
