@@ -124,6 +124,34 @@ def iot2():
     else:
         return "가져오기 실패"
 
+@app.route("/iot3")
+@app.route("/iot3/")
+def iot3():
+    result_req    = requests.get("https://media.daum.net/ranking/bestreply/")
+    result_txt    = result_req.text
+    result_head   = result_req.headers
+    result_status = result_req.status_code
+    if True == result_req.ok:
+        obj_soup  = BeautifulSoup(result_txt, "html.parser")
+        iot_data  = obj_soup.select("div.cont_thumb > strong.tit_thumb > a")
+        return render_template("main.html", iot_data = iot_data)
+    else:
+        return "가져오기 실패"
+
+@app.route("/iot4")
+@app.route("/iot4/")
+def iot4():
+    result_req    = requests.get("https://sports.news.naver.com/index.nhn")
+    result_txt    = result_req.text
+    result_head   = result_req.headers
+    result_status = result_req.status_code
+    if True == result_req.ok:
+        obj_soup  = BeautifulSoup(result_txt, "html.parser")
+        iot_data  = obj_soup.select("div.main_article_box > ul.main_article_list > li > a")
+        return render_template("main.html", iot_data = iot_data)
+    else:
+        return "가져오기 실패"
+
 @app.route("/log")
 def IoT_logging_test():
     test_value = 20190211
