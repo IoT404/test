@@ -1,6 +1,8 @@
 ﻿<!DOCTYPE html>
 <html>
-    {% for iot_list in iot_data %}
-        <h3> {{iot_list|safe}} </h3>
-    {% endfor %}
+    <body>
+        {% for iot_list in iot_data %}
+            <h3> {{iot_list|safe}} </h3>
+        {% endfor %}
+    </body>
 </html>

@@ -1,8 +1,8 @@
 #!/user/bin/python
 #-*-coding:utf-8-*-
-from flask import Flask, Response, make_response, url_for, render_template
-from flask import request, session, redirect
+from flask import Flask, Response, make_response, url_for, render_template, request, session, redirect
 from bs4 import BeautifulSoup
+import requests
 import sys
 
 reload(sys)
@@ -106,6 +106,20 @@ def iot():
     if True == result_req.ok:
         obj_soup  = BeautifulSoup(result_txt, "html.parser")
         iot_data  = obj_soup.select("#ej-tbl > tbody > tr > td > a")
+        return render_template("main.html", iot_data = iot_data)
+    else:
+        return "가져오기 실패"
+
+@app.route("/iot2")
+@app.route("/iot2/")
+def iot2():
+    result_req    = requests.get("https://media.daum.net/")
+    result_txt    = result_req.text
+    result_head   = result_req.headers
+    result_status = result_req.status_code
+    if True == result_req.ok:
+        obj_soup  = BeautifulSoup(result_txt, "html.parser")
+        iot_data  = obj_soup.select("div.box_headline > ul.list_headline > li > strong.tit_g > a")
         return render_template("main.html", iot_data = iot_data)
     else:
         return "가져오기 실패"
