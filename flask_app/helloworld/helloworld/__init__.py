@@ -1,6 +1,8 @@
 #!/user/bin/python
 #-*-coding:utf-8-*-
-from flask import Flask, Response, make_response, url_for, render_template, request, session
+from flask import Flask, Response, make_response, url_for, render_template
+from flask import request, session, redirect
+from bs4 import BeautifulSoup
 import sys
 
 reload(sys)
@@ -61,7 +63,8 @@ def logout():
 @app.route("/template/<iot_number>")
 def template_test(iot_number = None):
     iot_members = ["최성주", "주수홍", "최재원"]
-    return render_template("template_test.html", iot_number=iot_number, iot_members=iot_members)
+    return render_template("template_test.html", iot_number=iot_number,
+                           iot_members=iot_members)
 
 app.secret_key = "iot_key"
 
@@ -75,6 +78,37 @@ def get_test():
             return "로그인 실패"
     else:
         return "다시 시도해 주세요"
+
+@app.route("/gugu")
+@app.route("/gugu/")
+@app.route("/gugu/<int:iot_num>")
+def iot_gugu(iot_num=None):
+    return render_template("gugu.html", iot_num = iot_num)
+
+@app.route("/calcul", methods=["POST"])
+def calcul(iot_num=None):
+    if request.method == "POST":
+        if "" == request.form["iot_num"]:
+            cal_num = None
+        else:
+            cal_num = request.form["iot_num"]
+    else:
+        cal_num = None
+    return redirect(url_for("iot_gugu", iot_num = cal_num))
+
+@app.route("/iot")
+@app.route("/iot/")
+def iot():
+    result_req    = requests.get("http://busanit.ac.kr/p/?j=41")
+    result_txt    = result_req.text
+    result_head   = result_req.headers
+    result_status = result_req.status_code
+    if True == result_req.ok:
+        obj_soup  = BeautifulSoup(result_txt, "html.parser")
+        iot_data  = obj_soup.select("#ej-tbl > tbody > tr > td > a")
+        return render_template("main.html", iot_data = iot_data)
+    else:
+        return "가져오기 실패"
 
 @app.route("/log")
 def IoT_logging_test():
