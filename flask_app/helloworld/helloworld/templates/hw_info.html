@@ -4,8 +4,17 @@
         {% for key, value in hw_info.iteritems() %}
         <tr>
             <th> {{ key }} </th>
-            <td> {{ value }} </td>
+            <td align="right"> {{ value }} </td>
         </tr>
         {% endfor %}
+        </br>
+        <tr>
+            <td colspan="2" align="center">
+                <button id="update" onclick="window.location.href='/info'">UPDATE</button>
+            </td>
+        </tr>
     </table>
+    <button id="led_on" class="button" onclick="window.location.href='/led/on'">ON</button>
+    <button id="led_off" class="button" onclick="window.location.href='/led/off'">OFF</button>
+    <button id="led_off" class="button" onclick="window.location.href='/led/toggle'">Toggle</button>
 {% endblock %}

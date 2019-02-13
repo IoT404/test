@@ -6,6 +6,11 @@ from subprocess import PIPE, Popen
 import requests
 import sys
 import psutil
+import RPi.GPIO as GPIO
+
+LedPin = 19
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(LedPin, GPIO.OUT)
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -189,6 +194,15 @@ def iot_sys_info():
                             }
     return render_template('hw_info.html', hw_info = iot_sys_info_dict)
 
+@app.route("/led/<iot_state>")
+def led_onoff(iot_state):
+    if "on" == iot_state:
+        GPIO.output(LedPin, GPIO.HIGH)
+    if "off" == iot_state:
+        GPIO.output(LedPin, GPIO.LOW)
+    if "toggle" == iot_state:
+        GPIO.output(LedPin, not GPIO.input(LedPin))
+    return iot_sys_info()
 
 @app.route("/log")
 def IoT_logging_test():
