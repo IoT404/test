@@ -2,10 +2,8 @@
 #-*-coding:utf-8-*-
 from flask import Flask, Response, make_response, url_for, render_template, request, session, redirect
 from bs4 import BeautifulSoup
-from subprocess import PIPE, Popen 
 import requests
 import sys
-import psutil
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -153,42 +151,6 @@ def iot4():
         return render_template("main.html", iot_data = iot_data)
     else:
         return "가져오기 실패"
-
-@app.route("/test_temp")
-def iot_test_temp():
-    iot_string = "파이썬"
-    iot_list = [1000, 1324, 6745, 2456, 3456]
-    return render_template('template.html', my_string = iot_string, my_list = iot_list)
-
-def iot_measure_temp(): 
-    process = Popen(["vcgencmd", "measure_temp"], stdout=PIPE) 
-    output, _error = process.communicate() 
-    return float(output[output.index("=") + 1:output.rindex("'")])
-
-@app.route("/info")
-def iot_sys_info():
-#==============================================================================
-    cpu_temp            = iot_measure_temp()
-    cpu_percent         = psutil.cpu_percent() 
-    cpu_count           = psutil.cpu_count()
-#==============================================================================
-    memory              = psutil.virtual_memory()
-    mem_total           = memory.total
-    mem_percent         = memory.percent
-#==============================================================================
-    hd_disk             = psutil.disk_usage("/")
-    disk_percent        = hd_disk.percent
-#==============================================================================
-    iot_sys_info_dict   = {
-                            "CPU 코어 갯수"       :cpu_count,
-                            "디스크 사용율"       :disk_percent,
-                            "메모리 사용율"       :mem_percent,
-                            "전체 메모리"         :mem_total,
-                            "CPU 사용율"          :cpu_percent,
-                            "CPU 온도"            :cpu_temp,
-                            }
-    return render_template('hw_info.html', hw_info = iot_sys_info_dict)
-
 
 @app.route("/log")
 def IoT_logging_test():
