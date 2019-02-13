@@ -2,11 +2,13 @@
 #-*-coding:utf-8-*-
 from flask import Flask, Response, make_response, url_for, render_template, request, session, redirect
 from bs4 import BeautifulSoup
-from subprocess import PIPE, Popen 
+from subprocess import PIPE, Popen
+from camera import Camera 
 import requests
 import sys
 import psutil
 import RPi.GPIO as GPIO
+
 
 LedPin = 19
 GPIO.setmode(GPIO.BCM)
@@ -203,6 +205,19 @@ def led_onoff(iot_state):
     if "toggle" == iot_state:
         GPIO.output(LedPin, not GPIO.input(LedPin))
     return iot_sys_info()
+
+@app.route("/camera") 
+def iot_camera(): 
+    return render_template("camera.html")
+
+def iot_camera_start(camera): 
+    while True: 
+        frame = camera.get_frame() 
+        yield (b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n") 
+ 
+@app.route("/camera_run") 
+def iot_camera_run(): 
+    return Response(iot_camera_start(Camera()), mimetype="multipart/x-mixed-replace; boundary=frame")
 
 @app.route("/log")
 def IoT_logging_test():
